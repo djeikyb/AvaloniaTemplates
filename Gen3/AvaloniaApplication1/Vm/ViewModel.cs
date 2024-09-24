@@ -1,7 +1,3 @@
-using System;
-using System.ComponentModel;
-using Avalonia.Controls;
-using Avalonia.Controls.Models.TreeDataGrid;
 using ObservableCollections;
 using R3;
 using Serilog;
@@ -27,7 +23,6 @@ public class ViewModel
     }
 
     public ReactiveCommand<Unit> Click { get; }
-    public FlatTreeDataGridSource<LogEvent> LogEventGridSource { get; }
 
     private string[] _lines =
     [

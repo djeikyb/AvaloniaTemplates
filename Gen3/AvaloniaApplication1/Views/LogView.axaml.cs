@@ -1,10 +1,9 @@
 using System;
 using System.ComponentModel;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Models.TreeDataGrid;
-using Avalonia.Markup.Xaml;
 using AvaloniaApplication1.Vm;
+using Serilog;
 using Serilog.Events;
 
 namespace AvaloniaApplication1.Views;
@@ -17,20 +16,28 @@ public partial class LogView : UserControl
 
         DataContextChanged += (sender, _) =>
         {
-            var vm = ((LogView)sender).DataContext as ViewModel; // but what if not 😬
-            if (vm is null) return;
-        var LogEventGridSource = new FlatTreeDataGridSource<LogEvent>(vm.View)
-        {
-            Columns =
+            if (sender is not LogView lv)
             {
-                new TextColumn<LogEvent, string>("level", x => ToString(x.Level)),
-                new TextColumn<LogEvent, string>("time", x => x.Timestamp.LocalDateTime.ToString("hh:mm:ss:fff")),
-                new TextColumn<LogEvent, string>("message template", x => x.MessageTemplate.Text),
-            },
-        };
-        ((ITreeDataGridSource)LogEventGridSource).SortBy(LogEventGridSource.Columns[1], ListSortDirection.Descending);
-        LogEventGridSource.RowSelection!.SingleSelect = false;
-        LogTable.Source = LogEventGridSource;
+                Log.Error("🐍 ohno");
+                return;
+            }
+
+            var vm = lv.DataContext as ViewModel;
+            if (vm is null) return;
+
+            var source = new FlatTreeDataGridSource<LogEvent>(vm.View)
+            {
+                Columns =
+                {
+                    new TextColumn<LogEvent, string>("level", x => ToString(x.Level)),
+                    new TextColumn<LogEvent, string>("time", x => x.Timestamp.LocalDateTime.ToString("hh:mm:ss:fff")),
+                    new TextColumn<LogEvent, string>("message template", x => x.MessageTemplate.Text),
+                },
+            };
+            ((ITreeDataGridSource)source).SortBy(source.Columns[1],
+                ListSortDirection.Descending);
+            source.RowSelection!.SingleSelect = false;
+            LogTable.Source = source;
         };
     }
 
