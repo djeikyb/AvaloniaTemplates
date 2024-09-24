@@ -23,32 +23,7 @@ public class ViewModel
             logger.Information($"{next}");
         });
 
-        var view = App.LogsSink.Logs.ToNotifyCollectionChanged(SynchronizationContextCollectionEventDispatcher.Current);
-        LogEventGridSource = new FlatTreeDataGridSource<LogEvent>(view)
-        {
-            Columns =
-            {
-                new TextColumn<LogEvent, string>("level", x => ToString(x.Level)),
-                new TextColumn<LogEvent, string>("time", x => x.Timestamp.LocalDateTime.ToString("hh:mm:ss:fff")),
-                new TextColumn<LogEvent, string>("message template", x => x.MessageTemplate.Text),
-            },
-        };
-        ((ITreeDataGridSource)LogEventGridSource).SortBy(LogEventGridSource.Columns[1], ListSortDirection.Descending);
-        LogEventGridSource.RowSelection!.SingleSelect = false;
-    }
-
-    private static string ToString(LogEventLevel level)
-    {
-        return level switch
-        {
-            LogEventLevel.Verbose => "vrb",
-            LogEventLevel.Debug => "dbg",
-            LogEventLevel.Information => "inf",
-            LogEventLevel.Warning => "wrn",
-            LogEventLevel.Error => "err",
-            LogEventLevel.Fatal => "ftl",
-            _ => throw new ArgumentOutOfRangeException(nameof(level), level, null)
-        };
+        View = App.LogsSink.Logs.ToNotifyCollectionChanged(SynchronizationContextCollectionEventDispatcher.Current);
     }
 
     public ReactiveCommand<Unit> Click { get; }
@@ -71,4 +46,6 @@ public class ViewModel
         "so sweet",
         "and so cold",
     ];
+
+    public INotifyCollectionChangedSynchronizedViewList<LogEvent> View { get; }
 }
