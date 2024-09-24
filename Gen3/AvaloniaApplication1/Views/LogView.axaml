@@ -8,5 +8,6 @@
              x:Class="AvaloniaApplication1.Views.LogView">
   <TreeDataGrid Margin="9 0 9 0"
                 HorizontalAlignment="Stretch"
+                Name="LogTable"
                 Source="{Binding LogEventGridSource}" />
 </UserControl>
