@@ -8,7 +8,7 @@
              x:DataType="vm:ViewModel"
              x:Class="AvaloniaApplication1.Views.MainView">
   <DockPanel>
-    <views:SideBar Width="100"
+    <views:SideBar Width="126"
                    Margin="{Binding $parent[Window].WindowDecorationMargin}"
                    DockPanel.Dock="Left" />
     <Rectangle HorizontalAlignment="Stretch"
@@ -22,7 +22,9 @@
                Margin="0 0 0 0"
                DockPanel.Dock="Left" />
 
-    <views:TopBar DockPanel.Dock="Top" Background="{x:Null}" />
+    <views:TopBar Background="{x:Null}"
+                  Height="{Binding $parent[Window].WindowDecorationMargin.Top}"
+                  DockPanel.Dock="Top" />
 
     <Rectangle HorizontalAlignment="Stretch"
                Height="0.5"

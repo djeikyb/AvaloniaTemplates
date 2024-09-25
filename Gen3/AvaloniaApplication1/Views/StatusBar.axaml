@@ -6,7 +6,11 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="vm:ViewModel"
              x:Class="AvaloniaApplication1.Views.StatusBar">
-  <StackPanel Orientation="Horizontal">
-    <SelectableTextBlock Text="down at the bottom"/>
+  <StackPanel
+    Margin="0 3 0 3"
+    HorizontalAlignment="Center"
+    Orientation="Horizontal">
+    <SelectableTextBlock
+      Text="down at the bottom"/>
   </StackPanel>
 </UserControl>

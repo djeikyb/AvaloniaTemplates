@@ -20,7 +20,12 @@ public class ViewModel
         });
 
         View = App.LogsSink.Logs.ToNotifyCollectionChanged(SynchronizationContextCollectionEventDispatcher.Current);
+        TintOpacity = new(1m);
+        MaterialOpacity = new(1m);
     }
+
+    public BindableReactiveProperty<decimal> TintOpacity { get; }
+    public BindableReactiveProperty<decimal> MaterialOpacity { get; }
 
     public ReactiveCommand<Unit> Click { get; }
 

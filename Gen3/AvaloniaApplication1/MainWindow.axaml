@@ -6,32 +6,31 @@
         xmlns:views="clr-namespace:AvaloniaApplication1.Views"
         xmlns:avaloniaApplication1="clr-namespace:AvaloniaApplication1"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        Width="450" Height="280"
+        Width="500" Height="400"
         Position="50 100"
 
         TransparencyLevelHint="AcrylicBlur"
         ExtendClientAreaToDecorationsHint="True"
-        ExtendClientAreaChromeHints="PreferSystemChrome"
-        ExtendClientAreaTitleBarHeightHint="-1"
+        ExtendClientAreaChromeHints="Default, PreferSystemChrome, OSXThickTitleBar"
         SystemDecorations="Full"
-        Background="Transparent"
+        Background="{x:Null}"
 
         Name="Main"
         x:Class="AvaloniaApplication1.MainWindow"
         x:DataType="vm:ViewModel"
         Title="AvaloniaApplication1">
-  <DockPanel>
+  <Panel>
     <ExperimentalAcrylicBorder IsHitTestVisible="False" DockPanel.Dock="Left">
       <ExperimentalAcrylicBorder.Material>
         <ExperimentalAcrylicMaterial BackgroundSource="Digger"
                                      TintColor="{DynamicResource SystemChromeLowColor}"
-                                     FallbackColor="White"
-                                     TintOpacity="1"
-                                     MaterialOpacity="0.05" />
+                                     FallbackColor="{DynamicResource SystemChromeLowColor}"
+                                     TintOpacity="{Binding TintOpacity.Value}"
+                                     MaterialOpacity="{Binding MaterialOpacity.Value}" />
       </ExperimentalAcrylicBorder.Material>
     </ExperimentalAcrylicBorder>
     <Panel Margin="{Binding $parent[Window].OffScreenMargin}">
       <views:MainView />
     </Panel>
-  </DockPanel>
+  </Panel>
 </Window>
