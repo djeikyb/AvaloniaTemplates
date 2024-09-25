@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:AvaloniaApplication1.Vm"
+             xmlns:views="clr-namespace:AvaloniaApplication1.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:ViewModel"
+             x:Class="AvaloniaApplication1.Views.MainView">
+  <DockPanel>
+    <views:SideBar Width="100"
+                   Margin="{Binding $parent[Window].WindowDecorationMargin}"
+                   DockPanel.Dock="Left" />
+    <Rectangle HorizontalAlignment="Stretch"
+               Width="0.5"
+               Fill="{DynamicResource TitleBarSeparatorColorTop}"
+               Margin="0 0 0 0"
+               DockPanel.Dock="Left" />
+    <Rectangle HorizontalAlignment="Stretch"
+               Width="0.5"
+               Fill="{DynamicResource TitleBarSeparatorColorBottom}"
+               Margin="0 0 0 0"
+               DockPanel.Dock="Left" />
+
+    <views:TopBar DockPanel.Dock="Top" Background="{x:Null}"/>
+
+    <Rectangle HorizontalAlignment="Stretch"
+               Height="0.5"
+               Fill="{DynamicResource TitleBarSeparatorColorTop}"
+               Margin="0 0 0 0"
+               DockPanel.Dock="Top" />
+    <Rectangle HorizontalAlignment="Stretch"
+               Height="0.5"
+               Fill="{DynamicResource TitleBarSeparatorColorBottom}"
+               Margin="0 0 0 0"
+               DockPanel.Dock="Top" />
+
+    <views:LogView Background="White" />
+
+
+  </DockPanel>
+</UserControl>

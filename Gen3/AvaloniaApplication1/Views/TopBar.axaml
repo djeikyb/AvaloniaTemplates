@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:AvaloniaApplication1.Vm"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:ViewModel"
+             x:Class="AvaloniaApplication1.Views.TopBar">
+  <Grid ColumnDefinitions="* Auto *">
+    <Panel Background="Plum" IsHitTestVisible="False"
+           Grid.Column="0" />
+    <Button
+      Background="PaleTurquoise"
+      Content="🐙🐙🐙"
+      Command="{Binding Click}"
+      HorizontalContentAlignment="Center"
+      Padding="36 12 36 12"
+      HorizontalAlignment="Center"
+      Grid.Column="1" />
+    <Panel Background="LightGoldenrodYellow" IsHitTestVisible="False"
+           Grid.Column="2" />
+  </Grid>
+</UserControl>

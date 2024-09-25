@@ -1,0 +1,26 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:AvaloniaApplication1"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Width="350" Height="280"
+        Position="0 0"
+        x:Class="AvaloniaApplication1.MainWindow"
+        x:DataType="vm:ViewModel"
+        Title="AvaloniaApplication1">
+    <DockPanel>
+        <Button
+            DockPanel.Dock="Top"
+            Content="🐙"
+            Command="{Binding Click}"
+            Margin="12"
+            HorizontalContentAlignment="Center"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Stretch" />
+
+        <TreeDataGrid Margin="9 0 9 0"
+                      HorizontalAlignment="Stretch"
+                      Source="{Binding LogEventGridSource}" />
+    </DockPanel>
+</Window>

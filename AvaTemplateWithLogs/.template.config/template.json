@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json.schemastore.org/template",
+  "author": "Jacob Certain",
+  "classifications": [
+    "Desktop",
+    "Xaml",
+    "Avalonia",
+    "Windows",
+    "Linux",
+    "macOS"
+  ],
+  "description": "Cross-platform Avalonia Ui with R3, Serilog, and a built-in log viewer. Mac-ish.",
+  "identity": "Merviche.AvaloniaApp.1.0",
+  "name": "Avalonia + my basics",
+  "preferNameDirectory": true,
+  "shortName": "avalogs",
+  "sourceName": "AvaloniaApplication1",
+  "defaultName": "AvaloniaApplication1",
+  "tags": {
+    "language": "C#",
+    "type": "solution"
+  },
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "exclude": [
+            "**/.git/**",
+            "**/.idea/**",
+            "**/.DS_Store",
+            "artifacts/**"
+          ]
+        }
+      ]
+    }
+  ]
+}
