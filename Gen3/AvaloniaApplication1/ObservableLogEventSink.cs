@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using Avalonia;
 using ObservableCollections;
 using Serilog;
 using Serilog.Configuration;
 using Serilog.Core;
 using Serilog.Events;
+using Serilog.Templates;
+using Logger = Avalonia.Logging.Logger;
 
 namespace AvaloniaApplication1;
 
@@ -17,14 +20,33 @@ public static class ObservableLogEventSinkExtensions
 
     public static AppBuilder UseSerilog(this AppBuilder builder, ObservableLogEventSink sink)
     {
-        Avalonia.Logging.Logger.Sink = new AvaloniaSerilogAdapter();
+        Logger.Sink = new AvaloniaSerilogAdapter();
         return builder.AfterSetup((Action<AppBuilder>)(_ =>
-            Log.Logger = new LoggerConfiguration()
-                .Enrich.FromLogContext()
-                .MinimumLevel.Debug()
-                .WriteTo.ObservableSink(sink)
-                .WriteTo.Console()
-                .CreateLogger()));
+        {
+            var lc = new LoggerConfiguration();
+            lc.Enrich.FromLogContext();
+            lc.MinimumLevel.Verbose();
+
+            lc.WriteTo.Conditional(
+                le =>
+                {
+                    var scalar = le.Properties.GetValueOrDefault("source") as ScalarValue;
+                    if (scalar?.Value is not string s) return true;
+                    if (s.StartsWith("Avalonia.")) return false;
+                    if (le.Level < LogEventLevel.Warning) return false;
+                    return true;
+                },
+                lsc => lsc.ObservableSink(sink)
+            );
+
+
+            var template = "[{@t:HH:mm:ss.fff} {@l:u3}] {@m}\n"
+                           + "{#each k, v in @p}             \u2570\u2500\u2500 {k} = {v}{#delimit}\n{#end}\n";
+
+            lc.WriteTo.Console(new ExpressionTemplate(template, theme: MyTemplateThemes.Mine));
+
+            Log.Logger = lc.CreateLogger();
+        }));
     }
 }
 

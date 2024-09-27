@@ -1,5 +1,6 @@
 ﻿using System;
 using Avalonia;
+using Merviche.Logging.Serilog;
 using Serilog;
 
 namespace AvaloniaApplication1;
@@ -20,5 +21,15 @@ class Program
             .WithInterFont()
             .UseR3()
             .UseSerilog(App.LogsSink)
-            .AfterSetup(_ => Log.ForContext<Program>().Information("App setup complete!"));
+            .AfterSetup(_ =>
+            {
+                var logger = Log.ForContext<Program>();
+                var scope = logger.ForContext("foo", "bar");
+                scope.Information("App setup complete!");
+                scope.Verbose("App setup complete!");
+                scope.Debug("App setup complete!");
+                scope.Information("App setup complete!");
+                scope.Warning("App setup complete!");
+                scope.Error("App setup complete!");
+            });
 }
