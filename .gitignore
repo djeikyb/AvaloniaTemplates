@@ -2,3 +2,4 @@ obj/
 bin/
 artifacts/
 .idea/
+.DS_Store

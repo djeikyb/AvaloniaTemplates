@@ -9,9 +9,9 @@
     "Linux",
     "macOS"
   ],
-  "description": "Cross-platform Avalonia Ui with R3, Serilog, and a built-in log viewer. Mac-ish.",
+  "description": "Cross-platform Avalonia Ui with R3, ZLogger, and a built-in log viewer. Mac-ish.",
   "identity": "Merviche.AvaloniaApp.1.0",
-  "name": "Avalonia + my basics",
+  "name": "Avalonia | Merviche",
   "preferNameDirectory": true,
   "shortName": "avalogs",
   "sourceName": "AvaloniaApplication1",

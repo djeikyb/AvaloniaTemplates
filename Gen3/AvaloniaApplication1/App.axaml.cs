@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using AvaloniaApplication1.Vm;
-using HotAvalonia;
 
 namespace AvaloniaApplication1;
 
@@ -10,14 +9,13 @@ public class App : Application
 {
     static App()
     {
-        LogsSink = new ObservableLogEventSink(14);
+        LogsProvider = new ObservableLogProvider(14);
     }
 
-    public static ObservableLogEventSink LogsSink { get; }
+    public static ObservableLogProvider LogsProvider { get; }
 
     public override void Initialize()
     {
-        this.EnableHotReload(); // Ensure this line **precedes** `AvaloniaXamlLoader.Load(this);`
         AvaloniaXamlLoader.Load(this);
     }
 

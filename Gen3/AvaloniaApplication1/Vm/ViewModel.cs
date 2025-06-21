@@ -1,7 +1,6 @@
+using Microsoft.Extensions.Logging;
 using ObservableCollections;
 using R3;
-using Serilog;
-using Serilog.Events;
 
 namespace AvaloniaApplication1.Vm;
 
@@ -11,15 +10,15 @@ public class ViewModel
 
     public ViewModel()
     {
-        var logger = Log.ForContext<ViewModel>();
+        var logger = Log.GetLogger<ViewModel>();
         Click = new ReactiveCommand<Unit>();
         Click.Subscribe(_ =>
         {
             var next = _lines[_index++ % _lines.Length];
-            logger.Information($"{next}");
+            logger.LogInformation($"{next}");
         });
 
-        View = App.LogsSink.Logs.ToNotifyCollectionChanged(SynchronizationContextCollectionEventDispatcher.Current);
+        View = App.LogsProvider.Logs.ToNotifyCollectionChanged(SynchronizationContextCollectionEventDispatcher.Current);
         TintOpacity = new(1m);
         MaterialOpacity = new(1m);
     }
