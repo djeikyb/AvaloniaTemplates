@@ -33,37 +33,14 @@ public static class LogStartupExtensions
 
             logging.SetMinimumLevel(LogLevel.Debug);
 
-
-            // var zLoggerOptions = new ZLoggerOptions
-            // {
-            //     InternalErrorLogger = exception => Console.Error.WriteLine(exception.ToString()),
-            //     IncludeScopes = true,
-            //     TimeProvider = null,
-            //     FullMode = BackgroundBufferFullMode.Grow,
-            //     BackgroundBufferCapacity = 0,
-            //     IsFormatLogImmediatelyInStandardLog = true,
-            //     CaptureThreadInfo = true
-            // };
-            //
-            // zLoggerOptions.UseFormatter(() => new CLEFMessageTemplateFormatter());
-
-            // logging.AddZLoggerLogProcessor( new BatchingHttpLogProcessor("http://seq.test:5341/ingest/clef", 5, zLoggerOptions));
-            logging.AddZLoggerLogProcessor(options =>
+            logging.AddSeq("http://seq.test:5341", o =>
             {
-                options.CaptureThreadInfo = true;
-                options.IncludeScopes = true;
-                options.InternalErrorLogger = exception => Console.Error.WriteLine(exception.ToString());
-                options.UseFormatter(() => new CLEFMessageTemplateFormatter());
-                return new BatchingHttpLogProcessor("http://seq.test:5341/ingest/clef", 5, options);
+                o.IncludeScopes = true;
+                o.CaptureThreadInfo = true;
             });
 
             logging.AddZLoggerConsole(o =>
             {
-                // !!! uncomment to debug logging to seq:
-                // o.IncludeScopes = true;
-                // o.UseFormatter(() => new CLEFMessageTemplateFormatter());
-                // return;
-
                 o.UsePlainTextFormatter(formatter =>
                 {
                     formatter.SetPrefixFormatter($"{0:timeonly} {1}]", (in MessageTemplate template, in LogInfo info) =>

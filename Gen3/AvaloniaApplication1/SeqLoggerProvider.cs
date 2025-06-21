@@ -3,15 +3,98 @@
 using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ZLogger;
+using ZLogger.Providers;
 
 namespace AvaloniaApplication1;
 
+[ProviderAlias("Seq")]
+public class SeqLoggerProvider(ZLoggerLogProcessorLoggerProvider provider)
+    : ILoggerProvider, ISupportExternalScope, IAsyncDisposable
+{
+    public ILogger CreateLogger(string categoryName) => provider.CreateLogger(categoryName);
+    public void SetScopeProvider(IExternalScopeProvider scopeProvider) => provider.SetScopeProvider(scopeProvider);
+    public void Dispose() => provider.Dispose();
+    public async ValueTask DisposeAsync() => await provider.DisposeAsync();
+}
+
+public static class SeqZloggerExtensions
+{
+    public static ILoggingBuilder AddSeq(
+        this ILoggingBuilder builder,
+        string host,
+        Action<ZLoggerOptions> configure)
+    {
+        var ub = new UriBuilder(host);
+        ub.Path = "ingest/clef";
+
+        Func<ZLoggerOptions, IAsyncLogProcessor> logProcessorFactory;
+        logProcessorFactory = options =>
+        {
+            options.InternalErrorLogger = exception => Console.Error.WriteLine(exception.ToString());
+            options.UseFormatter(() => new CLEFMessageTemplateFormatter());
+
+            configure(options);
+
+            return new BatchingHttpLogProcessor(ub.Uri.ToString(), 5, options);
+        };
+
+        builder.Services.AddSingleton<ILoggerProvider, SeqLoggerProvider>(_ =>
+        {
+            ZLoggerOptions options = new ZLoggerOptions();
+            return new SeqLoggerProvider(new ZLoggerLogProcessorLoggerProvider(logProcessorFactory(options), options));
+        });
+
+        return builder;
+    }
+}
+
+public class BatchingHttpLogProcessor : BatchingAsyncLogProcessor
+{
+    // https://github.com/Cysharp/ZLogger?tab=readme-ov-file#logprocessor
+
+    private readonly string _uri;
+    HttpClient httpClient;
+    ArrayBufferWriter<byte> bufferWriter;
+    IZLoggerFormatter formatter;
+
+    public BatchingHttpLogProcessor(string uri, int batchSize, ZLoggerOptions options)
+        : base(batchSize, options)
+    {
+        _uri = uri;
+        httpClient = new HttpClient();
+        bufferWriter = new ArrayBufferWriter<byte>();
+        formatter = options.CreateFormatter();
+    }
+
+    protected override async ValueTask ProcessAsync(IReadOnlyList<INonReturnableZLoggerEntry> list)
+    {
+        foreach (var item in list)
+        {
+            item.FormatUtf8(bufferWriter, formatter);
+            bufferWriter.Write("\n"u8);
+        }
+
+        var byteArrayContent = new ByteArrayContent(bufferWriter.WrittenSpan.ToArray());
+        await httpClient.PostAsync(_uri, byteArrayContent).ConfigureAwait(false);
+
+        bufferWriter.Clear();
+    }
+
+    protected override ValueTask DisposeAsyncCore()
+    {
+        httpClient.Dispose();
+        return default;
+    }
+}
 
 // CLEF MessageTemplate Formatter https://clef-json.org/
 
