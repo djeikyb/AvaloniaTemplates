@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using Avalonia.Controls;
 using Avalonia.Controls.Models.TreeDataGrid;
+using AvaloniaApplication1.Logging;
 using AvaloniaApplication1.Vm;
 using Microsoft.Extensions.Logging;
 

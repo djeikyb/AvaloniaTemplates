@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using AvaloniaApplication1.Logging;
 using AvaloniaApplication1.Vm;
 
 namespace AvaloniaApplication1;

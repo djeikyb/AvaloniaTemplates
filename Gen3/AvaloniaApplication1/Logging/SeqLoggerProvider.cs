@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 using ZLogger;
 using ZLogger.Providers;
 
-namespace AvaloniaApplication1;
+namespace AvaloniaApplication1.Logging;
 
 [ProviderAlias("Seq")]
 public class SeqLoggerProvider(ZLoggerLogProcessorLoggerProvider provider)

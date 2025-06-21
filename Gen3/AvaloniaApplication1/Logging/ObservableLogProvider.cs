@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using ObservableCollections;
 using ZLogger;
 
-namespace AvaloniaApplication1;
+namespace AvaloniaApplication1.Logging;
 
 // This is our own global logger manager
 public static class Log

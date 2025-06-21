@@ -2,13 +2,13 @@ using System;
 using Avalonia.Logging;
 using Microsoft.Extensions.Logging;
 
-namespace AvaloniaApplication1;
+namespace AvaloniaApplication1.Logging;
 
 public class AvaloniaMelAdapter : ILogSink
 {
     public bool IsEnabled(LogEventLevel level, string area)
     {
-        return AvaloniaApplication1.Log.GetLogger($"Avalonia.Area.{area}").IsEnabled(level switch
+        return Logging.Log.GetLogger($"Avalonia.Area.{area}").IsEnabled(level switch
         {
             LogEventLevel.Verbose => LogLevel.Trace,
             LogEventLevel.Debug => LogLevel.Debug,
@@ -25,7 +25,7 @@ public class AvaloniaMelAdapter : ILogSink
 
     public void Log(LogEventLevel level, string area, object? source, string messageTemplate, params object?[] args)
     {
-        AvaloniaApplication1.Log.GetLogger($"Avalonia.Area.{area}").Log(level switch
+        Logging.Log.GetLogger($"Avalonia.Area.{area}").Log(level switch
         {
             LogEventLevel.Verbose => LogLevel.Trace,
             LogEventLevel.Debug => LogLevel.Debug,

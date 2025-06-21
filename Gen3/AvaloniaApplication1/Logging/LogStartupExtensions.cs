@@ -1,10 +1,9 @@
-using System;
 using Avalonia;
 using Avalonia.Logging;
 using Microsoft.Extensions.Logging;
 using ZLogger;
 
-namespace AvaloniaApplication1;
+namespace AvaloniaApplication1.Logging;
 
 public static class LogStartupExtensions
 {
