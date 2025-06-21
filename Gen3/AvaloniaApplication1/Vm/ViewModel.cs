@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using ObservableCollections;
 using R3;
+using ZLogger;
 
 namespace AvaloniaApplication1.Vm;
 
@@ -15,7 +16,7 @@ public class ViewModel
         Click.Subscribe(_ =>
         {
             var next = _lines[_index++ % _lines.Length];
-            logger.LogInformation($"{next}");
+            logger.ZLogInformation($"{next}");
         });
 
         View = App.LogsProvider.Logs.ToNotifyCollectionChanged(SynchronizationContextCollectionEventDispatcher.Current);

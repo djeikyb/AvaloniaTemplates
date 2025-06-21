@@ -1,3 +1,4 @@
+using System;
 using Avalonia;
 using Avalonia.Logging;
 using Microsoft.Extensions.Logging;
@@ -31,6 +32,22 @@ public static class LogStartupExtensions
             logging.AddFilter($"Avalonia.Area.Layout", LogLevel.Warning);
 
             logging.SetMinimumLevel(LogLevel.Debug);
+
+
+            var zLoggerOptions = new ZLoggerOptions
+            {
+                InternalErrorLogger = exception => Console.Error.WriteLine(exception.ToString()),
+                IncludeScopes = true,
+                TimeProvider = null,
+                FullMode = BackgroundBufferFullMode.Grow,
+                BackgroundBufferCapacity = 0,
+                IsFormatLogImmediatelyInStandardLog = false,
+                CaptureThreadInfo = false
+            };
+
+            zLoggerOptions.UseFormatter(() => new CLEFMessageTemplateFormatter());
+
+            logging.AddZLoggerLogProcessor( new BatchingHttpLogProcessor("http://seq.test:5341/ingest/clef", 5, zLoggerOptions));
 
             logging.AddZLoggerConsole(o =>
             {
