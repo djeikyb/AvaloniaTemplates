@@ -22,8 +22,6 @@ public class BatchingHttpLogProcessor : BatchingAsyncLogProcessor
         httpClient = new HttpClient();
         bufferWriter = new ArrayBufferWriter<byte>();
         formatter = options.CreateFormatter();
-        // formatter = options.UseFormatter(() => new CLEFMessageTemplateFormatter()).CreateFormatter();
-        // formatter = options.UseCompactLogEventFormat().CreateFormatter();
     }
 
     protected override async ValueTask ProcessAsync(IReadOnlyList<INonReturnableZLoggerEntry> list)

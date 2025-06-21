@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using Avalonia;
 using Merviche.Logging;
 using Microsoft.Extensions.Logging;
+using ZLogger;
 
 namespace AvaloniaApplication1;
 
@@ -23,8 +25,7 @@ class Program
             .UseZLogger(App.LogsProvider)
             .AfterSetup(_ =>
             {
-                var logger = Log.Logger;
-                var scope = logger.With("foo", "bar");
+                var scope = Log.Logger.With("foo", "bar");
                 scope.LogTrace("App setup complete!");
                 scope.LogDebug("App setup complete!");
                 scope.LogInformation("App setup complete!");

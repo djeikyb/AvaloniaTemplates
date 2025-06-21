@@ -1,6 +1,8 @@
 // https://raw.githubusercontent.com/Cysharp/ZLogger/refs/tags/2.5.10/sandbox/ConsoleApp/SampleCustomFormatter.cs
 
+using System;
 using System.Buffers;
+using System.Collections.Generic;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -70,6 +72,26 @@ internal class CLEFMessageTemplateFormatter : IZLoggerFormatter
         if (entry.LogInfo.Exception != null)
         {
             jsonWriter.WriteString(Exception, entry.LogInfo.Exception.ToString());
+        }
+
+        var scopeState = entry.LogInfo.ScopeState;
+        if (scopeState != null && !scopeState.IsEmpty)
+        {
+            var properties = scopeState.Properties;
+            for (var i = 0; i < properties.Length; i++)
+            {
+                var kv = properties[i];
+                switch (kv.Value)
+                {
+                    case { } v:
+                        v = v.ToString() ?? string.Empty;
+                        jsonWriter.WriteString(JsonEncodedText.Encode(kv.Key), JsonEncodedText.Encode((string)v));
+                        break;
+                    default:
+                        jsonWriter.WriteNull(JsonEncodedText.Encode(kv.Key));
+                        break;
+                }
+            }
         }
 
         // Parameters
