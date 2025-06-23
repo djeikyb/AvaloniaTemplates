@@ -16,6 +16,11 @@ using ZLogger.Providers;
 
 namespace AvaloniaApplication1.Logging;
 
+public class AppLoggerOptions : ZLoggerOptions
+{
+    public (string Key, string Value)[]? StaticLogProps { get; set; }
+}
+
 [ProviderAlias("Seq")]
 public class SeqLoggerProvider(ZLoggerLogProcessorLoggerProvider provider)
     : ILoggerProvider, ISupportExternalScope, IAsyncDisposable
@@ -31,16 +36,16 @@ public static class SeqZloggerExtensions
     public static ILoggingBuilder AddSeq(
         this ILoggingBuilder builder,
         string host,
-        Action<ZLoggerOptions> configure)
+        Action<AppLoggerOptions> configure)
     {
         var ub = new UriBuilder(host);
         ub.Path = "ingest/clef";
 
-        Func<ZLoggerOptions, IAsyncLogProcessor> logProcessorFactory;
+        Func<AppLoggerOptions, IAsyncLogProcessor> logProcessorFactory;
         logProcessorFactory = options =>
         {
             options.InternalErrorLogger = exception => Console.Error.WriteLine(exception.ToString());
-            options.UseFormatter(() => new CLEFMessageTemplateFormatter());
+            options.UseFormatter(() => new CLEFMessageTemplateFormatter(options));
 
             configure(options);
 
@@ -49,7 +54,7 @@ public static class SeqZloggerExtensions
 
         builder.Services.AddSingleton<ILoggerProvider, SeqLoggerProvider>(_ =>
         {
-            ZLoggerOptions options = new ZLoggerOptions();
+            AppLoggerOptions options = new();
             return new SeqLoggerProvider(new ZLoggerLogProcessorLoggerProvider(logProcessorFactory(options), options));
         });
 
@@ -98,7 +103,7 @@ public class BatchingHttpLogProcessor : BatchingAsyncLogProcessor
 
 // CLEF MessageTemplate Formatter https://clef-json.org/
 
-internal class CLEFMessageTemplateFormatter : IZLoggerFormatter
+internal class CLEFMessageTemplateFormatter(AppLoggerOptions options) : IZLoggerFormatter
 {
     static readonly JsonEncodedText Timestamp = JsonEncodedText.Encode("@t");
     static readonly JsonEncodedText Message = JsonEncodedText.Encode("@m");
@@ -159,10 +164,22 @@ internal class CLEFMessageTemplateFormatter : IZLoggerFormatter
 
         if (options.CaptureThreadInfo)
         {
-
             var k = "ThreadId";
             var v = entry.LogInfo.ThreadInfo.ThreadId.ToString();
-                        jsonWriter.WriteString(JsonEncodedText.Encode(k), JsonEncodedText.Encode(v));
+            jsonWriter.WriteString(JsonEncodedText.Encode(k), JsonEncodedText.Encode(v));
+        }
+
+        if (options.StaticLogProps?.Length > 0)
+        {
+            var properties = options.StaticLogProps;
+            for (var i = 0; i < properties.Length; i++)
+            {
+                var kv = properties[i];
+                if (kv.Value is { } v)
+                    jsonWriter.WriteString(JsonEncodedText.Encode(kv.Key), JsonEncodedText.Encode(v));
+                else
+                    jsonWriter.WriteNull(JsonEncodedText.Encode(kv.Key));
+            }
         }
 
         var scopeState = entry.LogInfo.ScopeState;

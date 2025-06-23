@@ -1,3 +1,4 @@
+using System;
 using Avalonia;
 using Avalonia.Logging;
 using Microsoft.Extensions.Logging;
@@ -34,6 +35,11 @@ public static class LogStartupExtensions
 
             logging.AddSeq("http://seq.test:5341", o =>
             {
+                o.StaticLogProps =
+                [
+                    new("MachineName", Environment.MachineName),
+                    new("AppName", "AvaloniaApplication1"),
+                ];
                 o.IncludeScopes = true;
                 o.CaptureThreadInfo = true;
             });
