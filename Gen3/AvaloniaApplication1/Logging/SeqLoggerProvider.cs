@@ -157,6 +157,14 @@ internal class CLEFMessageTemplateFormatter : IZLoggerFormatter
             jsonWriter.WriteString(Exception, entry.LogInfo.Exception.ToString());
         }
 
+        if (options.CaptureThreadInfo)
+        {
+
+            var k = "ThreadId";
+            var v = entry.LogInfo.ThreadInfo.ThreadId.ToString();
+                        jsonWriter.WriteString(JsonEncodedText.Encode(k), JsonEncodedText.Encode(v));
+        }
+
         var scopeState = entry.LogInfo.ScopeState;
         if (scopeState != null && !scopeState.IsEmpty)
         {
